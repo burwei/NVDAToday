@@ -94,4 +94,36 @@
    rm -r src/artifacts
    forge clean
    ```
- 
+
+## Day 2: create React app for Counter contract
+ - Install packages ane build app:  
+   ```
+   mkdir frontend
+   cd frontend
+   npx create-react-app counter
+   cd counter
+   npm install ethers@5.7.2    // must be 5.7.2 (the latest version 5, version 6 is unstable and won't work)
+   ```
+ - Do the development: All the files are in frontend/counter
+ - Spin up anvil (no remixd needed) and deploy the contract using forge
+   ```
+   // in anvil terminal
+   anvil
+
+   // in forge terminal
+   forge clean
+   forge compile
+   forge create src/Counter.sol:Counter --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80  
+   ```
+ - Create the .env_local:  
+   ```
+   REACT_APP_CONTRACT_ADDRESS=YourContractAddressHere   // copy the address from anvil terminal
+   REACT_APP_RPC_URL=http://localhost:8545
+   ```
+ - Add Counter.json to frontend/counter/src/abi/Counter.json from smart_contract/out/Counter.sol/Counter.json.   
+   Remember only need to copy the abi array, don't copy the whole file.  
+ - Run the React app:  
+   ```
+   // in react terminal
+   npm start
+   ```
