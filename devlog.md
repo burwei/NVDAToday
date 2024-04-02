@@ -57,3 +57,41 @@
    // back to our previous terminal where we're in /smart_contract
    forge create src/Counter.sol:Counter --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
    ```
+
+## Day 2: setup Foundry + Remix IDE development env and workflow
+ - Install remixd: 
+   ```
+   npm install -g @remix-project/remixd
+   ```
+ - Spin up the manual testing env:  
+   ```
+   // open a new terminal
+   anvil
+
+   // open another new terminal (in the directory we're going to share the files)
+   remixd
+   ``` 
+   And do the following:  
+   1. Open https://remix.ethereum.org.  
+   2. Connect to file system.  
+   3. Choose the corresponding contract version.
+   4. Connect to Dev - Foundry Provider.  
+ - Deploy contract and do the manual testing:  
+   1. forge clean
+   2. forge compile 
+   3. forge create src/Counter.sol:Counter --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 
+   4. Set the "At Address" and interact manually with the contract using Remix IDE.  
+ - Shutdown the manual testing env:  
+   ```
+   // in anvil terminal
+   ctrl + c
+
+   // in remixd terminal
+   ctrl + c
+
+   // in forge terminal, remove the files added by Remix IDE when interacting with the contract
+   // and clean forge artifacts
+   rm -r src/artifacts
+   forge clean
+   ```
+ 
