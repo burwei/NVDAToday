@@ -40,19 +40,17 @@ contract NvdaToday {
         );
 
         if (price > lastPrice && playersBetHigher.length > 0) {
-            uint256 baseWinningUnit = totalWinning / totalStakeBetHigher;
             for (uint256 i = 0; i < playersBetHigher.length; i++) {
                 payable(playersBetHigher[i]).transfer(
-                    baseWinningUnit * stakesBetHigher[playersBetHigher[i]]
+                    totalWinning * 1000 / totalStakeBetHigher * stakesBetHigher[playersBetHigher[i]] / 1000
                 );
             }
             totalStakeBetHigher = 0;
             totalStakeBetLower = 0;
         } else if (price < lastPrice && playersBetLower.length > 0) {
-            uint256 baseWinningUnit = totalWinning / totalStakeBetLower;
             for (uint256 i = 0; i < playersBetLower.length; i++) {
                 payable(playersBetLower[i]).transfer(
-                    baseWinningUnit * stakesBetLower[playersBetLower[i]]
+                    totalWinning * 1000 / totalStakeBetLower * stakesBetLower[playersBetLower[i]] / 1000
                 );
             }
             totalStakeBetHigher = 0;
@@ -72,4 +70,14 @@ contract NvdaToday {
 
         lastPrice = price;
     }
+
+    function getBalance() public view returns(uint256) {
+        return address(this).balance;
+    }
+
+    // Function to receive Ether. msg.data must be empty
+    receive() external payable {}
+
+    // Fallback function is called when msg.data is not empty
+    fallback() external payable {}
 }
