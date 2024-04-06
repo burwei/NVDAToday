@@ -4,3 +4,6 @@
 [submodule "smart_contract/lib/BokkyPooBahsDateTimeLibrary"]
 	path = smart_contract/lib/BokkyPooBahsDateTimeLibrary
 	url = https://github.com/bokkypoobah/BokkyPooBahsDateTimeLibrary
+[submodule "smart_contract/lib/chainlink"]
+	path = smart_contract/lib/chainlink
+	url = https://github.com/smartcontractkit/chainlink
