@@ -94,7 +94,7 @@ contract NvdaTodayTest is Test {
         vm.warp(invalidTimestamp); // 'vm.warp' manipulates the block timestamp
 
         // Attempt to call processBets and expect it to fail
-        vm.expectRevert(bytes("You can only call this function between 20:00 and 23:00 UTC"));
+        vm.expectRevert(bytes("You can only call this function between 21:00 and 22:00 UTC"));
         nvdaToday.processBets();
     }
 }

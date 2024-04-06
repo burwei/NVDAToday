@@ -5,6 +5,10 @@ import "BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeLibrary.sol";
 import {console} from "forge-std/Test.sol";
 
 contract NvdaToday {
+    uint constant minBet = 1000000000000000; // 1 finney
+    uint constant contractFee = 10000000000000; // 0.01 finney (1% fee or less)
+    uint constant PRECISION_FACTOR = 1000;
+
     uint public lastPrice;
     uint public totalStakeBetHigher;
     uint public totalStakeBetLower;
@@ -18,7 +22,7 @@ contract NvdaToday {
     fallback() external payable {}
 
     function betHigher() public payable {
-        require(msg.value > 0, "You must bet more than 0");
+        require(msg.value >= minBet, "You must bet more than 1 finney");
         uint stack = stakesBetHigher[msg.sender];
         if (stack == 0) {
             playersBetHigher.push(msg.sender);
@@ -29,7 +33,7 @@ contract NvdaToday {
     }
 
     function betLower() public payable {
-        require(msg.value > 0, "You must bet more than 0");
+        require(msg.value >= minBet, "You must bet more than 1 finney");
         uint stack = stakesBetLower[msg.sender];
         if (stack == 0) {
             playersBetLower.push(msg.sender);
@@ -49,7 +53,8 @@ contract NvdaToday {
         if (price > lastPrice && playersBetHigher.length > 0) {
             for (uint i = 0; i < playersBetHigher.length; i++) {
                 payable(playersBetHigher[i]).transfer(
-                    totalWinning * 1000 / totalStakeBetHigher * stakesBetHigher[playersBetHigher[i]] / 1000
+                    (((totalWinning * PRECISION_FACTOR) / totalStakeBetHigher) *
+                        stakesBetHigher[playersBetHigher[i]]) / PRECISION_FACTOR
                 );
             }
             totalStakeBetHigher = 0;
@@ -57,7 +62,8 @@ contract NvdaToday {
         } else if (price < lastPrice && playersBetLower.length > 0) {
             for (uint i = 0; i < playersBetLower.length; i++) {
                 payable(playersBetLower[i]).transfer(
-                    totalWinning * 1000 / totalStakeBetLower * stakesBetLower[playersBetLower[i]] / 1000
+                    (((totalWinning * PRECISION_FACTOR) / totalStakeBetLower) *
+                        stakesBetLower[playersBetLower[i]]) / PRECISION_FACTOR
                 );
             }
             totalStakeBetHigher = 0;
@@ -79,19 +85,22 @@ contract NvdaToday {
     }
 
     // TODO: implement this function
-    function getNvdaPrice() public view returns(uint) {
+    function getNvdaPrice() public view returns (uint) {
         return lastPrice;
     }
 
     function processBets() public {
         uint currentHour = BokkyPooBahsDateTimeLibrary.getHour(block.timestamp);
-        require(currentHour >= 20 && currentHour <= 23, "You can only call this function between 20:00 and 23:00 UTC");
+        require(
+            currentHour >= 21 && currentHour <= 22,
+            "You can only call this function between 21:00 and 22:00 UTC"
+        );
 
         uint price = getNvdaPrice();
         settleBets(price);
     }
 
-    function getBalance() public view returns(uint) {
+    function getBalance() public view returns (uint) {
         return address(this).balance;
     }
 }
