@@ -43,6 +43,9 @@ contract NvdaToday {
         stakesBetLower[msg.sender] = stack;
     }
 
+    // settleBets calculates the winning amount for each player and transfers the winnings to their address.  
+    // It's an internal function for public mainnet or testnet.  
+    // And it must be public for local testnet.  
     function settleBets(uint price) internal {
         uint totalWinning = totalStakeBetHigher + totalStakeBetLower;
         require(
@@ -84,11 +87,15 @@ contract NvdaToday {
         lastPrice = price;
     }
 
-    // TODO: implement this function
-    function getNvdaPrice() public view returns (uint) {
+    // getNvdaPrice returns the last closing price of NVDA stock.
+    // It's only for public mainnet or testnet.
+    function getNvdaPrice() internal view returns (uint) {
+        // TODO: implement this function
         return lastPrice;
     }
 
+    // processBets settles the bets based on the last closing price of NVDA stock.
+    // It's only for public mainnet or testnet.
     function processBets() public {
         uint currentHour = BokkyPooBahsDateTimeLibrary.getHour(block.timestamp);
         require(
