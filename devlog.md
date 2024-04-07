@@ -127,3 +127,13 @@
    // in react terminal
    npm start
    ```
+## Day 3&4: not doing much, only figuring out a new development workflow 
+ - Writing code and unit test on local (vscode + forge)
+ - Manual testing using Remix IDE and anvil:  
+   1. Start anvil
+   2. Copy the contract to deploy from local file system to Remix IDE
+   3. Connect Remix IDE to anvil
+   4. Compile and deploy contract using Remix IDE
+   5. Interact with the contract using Remix IDE UI
+   6. Stop anvil after testing
+ - In this approach, no need to clean any artifacts in local file system.  
