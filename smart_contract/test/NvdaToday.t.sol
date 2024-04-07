@@ -79,7 +79,7 @@ contract NvdaTodayTest is Test {
     }
 
     function testProcessBets() public {
-        // Set block.timestamp to a time within 20:00 - 23:00 UTC
+        // Set block.timestamp to a time within 21:00 - 23:59 UTC
         uint validTimestamp = 1712696400; // This is 2024-04-09 @ 21:00 (UTC)
         vm.warp(validTimestamp);
 
@@ -89,12 +89,12 @@ contract NvdaTodayTest is Test {
     }
 
     function testProcessBetsOutsideAllowedHours() public {
-        // Set block.timestamp to a time outside 20:00 - 23:00 UTC
+        // Set block.timestamp to a time outside 21:00 - 23:59 UTC
         uint invalidTimestamp = 1712667600; // This is 2024-04-09 @ 13:00 (UTC)
         vm.warp(invalidTimestamp); // 'vm.warp' manipulates the block timestamp
 
         // Attempt to call processBets and expect it to fail
-        vm.expectRevert(bytes("You can only call this function between 21:00 and 22:00 UTC"));
+        vm.expectRevert(bytes("You can only call this function between 21:00 and 23:59 UTC"));
         nvdaToday.processBets();
     }
 }
