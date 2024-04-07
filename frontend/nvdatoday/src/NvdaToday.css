@@ -1,0 +1,83 @@
+.nvda-today {
+    font-family: 'Arial', sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.nvda-today h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.price-info {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.pool-section {
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.pool-section .pool-box {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.config-section {
+    display: flex;
+    align-items: center; /* Aligns items vertically within the flex container */
+    justify-content: flex-start; /* Aligns items to the start of the flex container */
+    gap: 10px; /* Creates space between items */
+    margin-bottom: 20px;
+}
+
+.config-section label,
+.config-section input,
+.config-section button {
+    margin:5px;
+    white-space: nowrap; /* Prevents wrapping of text in a single line */
+    display: inline-block;
+}
+
+.config-section input {
+    flex-grow: 1; /* Allows the input to grow and fill available space */
+    display: inline-block;
+}
+
+.connect-metamask {
+    padding: 10px 20px; /* Adjust padding as needed */
+}
+
+.bet-section {
+    width: 48%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.action-buttons {
+    text-align: center;
+}
+
+.action-buttons .grey {
+    background-color: #6c757d;
+    /* Bootstrap 'btn-secondary' color */
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.action-buttons .grey:hover {
+    background-color: #5a6268;
+}
