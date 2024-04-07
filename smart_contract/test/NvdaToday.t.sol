@@ -1,17 +1,41 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Test, console} from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 import {NvdaToday} from "../src/NvdaToday.sol";
 
-contract PublicNvdaToday is NvdaToday {
+contract MockNvdaToday is NvdaToday {
+    function getPlayersBetHigher() public view returns (address[] memory) {
+        return playersBetHigher;
+    }
+
+    function getPlayersBetLower() public view returns (address[] memory) {
+        return playersBetLower;
+    }
+
+    function getStakesBetHigherByAddress(
+        address player
+    ) public view returns (uint) {
+        return stakesBetHigher[player];
+    }
+
+    function getStakesBetLowerByAddress(
+        address player
+    ) public view returns (uint) {
+        return stakesBetLower[player];
+    }
+
+    function getLastNvdaPrice() internal pure override returns (uint) {
+        return 0;
+    }
+
     function publicSettleBets(uint price) public {
         settleBets(price);
     }
 }
 
 contract NvdaTodayTest is Test {
-    PublicNvdaToday nvdaToday;
+    MockNvdaToday nvdaToday;
 
     // Function to receive Ether. msg.data must be empty
     receive() external payable {}
@@ -20,41 +44,69 @@ contract NvdaTodayTest is Test {
     fallback() external payable {}
 
     function setUp() public {
-        nvdaToday = new PublicNvdaToday();
+        nvdaToday = new MockNvdaToday();
     }
 
     function testBetHigher() public {
         uint initCallerBalance = address(this).balance;
         uint initCalleeBalance = address(nvdaToday).balance;
 
-        // First test case: bet 1 ether
-        nvdaToday.betHigher{value: 1 ether}();
-        assertEq(nvdaToday.totalStakeBetHigher(), 1 ether);
-        assertEq(address(this).balance, initCallerBalance - 1 ether);
-        assertEq(address(nvdaToday).balance, initCalleeBalance + 1 ether);
+        uint rawStake = (1 ether + nvdaToday.CONTRACT_FEE());
+        uint stake = 1 ether;
+        nvdaToday.betHigher{value: rawStake}();
 
-        // Second test case: bet another 2 ether
-        nvdaToday.betHigher{value: 2 ether}();
-        assertEq(nvdaToday.totalStakeBetHigher(), 3 ether);
-        assertEq(address(this).balance, initCallerBalance - 3 ether);
-        assertEq(address(nvdaToday).balance, initCalleeBalance + 3 ether);
+        assertEq(nvdaToday.totalStakeBetHigher(), stake);
+        assertEq(address(this).balance, initCallerBalance - rawStake);
+        assertEq(address(nvdaToday).balance, initCalleeBalance + rawStake);
+        assertEq(nvdaToday.totalStakeBetHigher(), stake);
+        assertEq(nvdaToday.totalStakeBetLower(), 0);
+        assertEq(nvdaToday.getPlayersBetHigher().length, 1);
+        assertEq(nvdaToday.getPlayersBetHigher()[0], address(this));
+        assertEq(nvdaToday.getStakesBetHigherByAddress(address(this)), stake);
+    }
+
+    function testBetHigherWithoutEnoughFunds() public {
+        uint initCalleeBalance = address(nvdaToday).balance;
+
+        vm.expectRevert(bytes("You must bet more than 1 finney"));
+        nvdaToday.betHigher{value: 100 gwei}();
+
+        assertEq(address(nvdaToday).balance, initCalleeBalance);
+        assertEq(nvdaToday.totalStakeBetHigher(), 0);
+        assertEq(nvdaToday.totalStakeBetLower(), 0);
+        assertEq(nvdaToday.getPlayersBetHigher().length, 0);
+        assertEq(nvdaToday.getStakesBetHigherByAddress(address(this)), 0);
     }
 
     function testBetLower() public {
         uint initCallerBalance = address(this).balance;
         uint initCalleeBalance = address(nvdaToday).balance;
 
-        // First test case: bet 1 ether
-        nvdaToday.betLower{value: 1 ether}();
-        assertEq(nvdaToday.totalStakeBetLower(), 1 ether);
-        assertEq(address(this).balance, initCallerBalance - 1 ether);
-        assertEq(address(nvdaToday).balance, initCalleeBalance + 1 ether);
+        uint rawStake = (1 ether + nvdaToday.CONTRACT_FEE());
+        uint stake = 1 ether;
+        nvdaToday.betLower{value: rawStake}();
 
-        // Second test case: bet another 2 ether
-        nvdaToday.betLower{value: 2 ether}();
-        assertEq(nvdaToday.totalStakeBetLower(), 3 ether);
-        assertEq(address(this).balance, initCallerBalance - 3 ether);
-        assertEq(address(nvdaToday).balance, initCalleeBalance + 3 ether);
+        assertEq(nvdaToday.totalStakeBetLower(), 1 ether);
+        assertEq(address(this).balance, initCallerBalance - rawStake);
+        assertEq(address(nvdaToday).balance, initCalleeBalance + rawStake);
+        assertEq(nvdaToday.totalStakeBetHigher(), 0);
+        assertEq(nvdaToday.totalStakeBetLower(), stake);
+        assertEq(nvdaToday.getPlayersBetLower().length, 1);
+        assertEq(nvdaToday.getPlayersBetLower()[0], address(this));
+        assertEq(nvdaToday.getStakesBetLowerByAddress(address(this)), stake);
+    }
+
+    function testBetLowerWithoutEnoughFunds() public {
+        uint initCalleeBalance = address(nvdaToday).balance;
+
+        vm.expectRevert(bytes("You must bet more than 1 finney"));
+        nvdaToday.betLower{value: 100 gwei}();
+
+        assertEq(address(nvdaToday).balance, initCalleeBalance);
+        assertEq(nvdaToday.totalStakeBetHigher(), 0);
+        assertEq(nvdaToday.totalStakeBetLower(), 0);
+        assertEq(nvdaToday.getPlayersBetLower().length, 0);
+        assertEq(nvdaToday.getStakesBetLowerByAddress(address(this)), 0);
     }
 
     function testSettleBets() public {
@@ -62,20 +114,31 @@ contract NvdaTodayTest is Test {
         uint initCalleeBalance = address(nvdaToday).balance;
 
         // First test case: price is higher than last price, bet higher
-        nvdaToday.betHigher{value: 1 ether}();
+        uint rawStake = (1 ether + nvdaToday.CONTRACT_FEE());
+        uint stake = 1 ether;
+        nvdaToday.betHigher{value: rawStake}();
         nvdaToday.publicSettleBets(2);
+
         assertEq(nvdaToday.totalStakeBetHigher(), 0);
         assertEq(nvdaToday.totalStakeBetLower(), 0);
-        assertEq(address(this).balance, initCallerBalance);
-        assertEq(address(nvdaToday).balance, initCalleeBalance);
+        assertEq(address(this).balance, initCallerBalance - nvdaToday.CONTRACT_FEE());
+        assertEq(address(nvdaToday).balance, initCalleeBalance + nvdaToday.CONTRACT_FEE());
+        assertEq(nvdaToday.getPlayersBetHigher().length, 0);
+        assertEq(nvdaToday.getPlayersBetLower().length, 0);
+        assertEq(nvdaToday.getStakesBetHigherByAddress(address(this)), 0);
 
-        // Second test case: price is higher than last price, bet lower
-        nvdaToday.betLower{value: 1 ether}();
+        // Second test case: continue the scenario, now price is higher than last price, bet lower
+        // This time we'll have some remaining balance in the contract.  
+        nvdaToday.betLower{value: rawStake}();
         nvdaToday.publicSettleBets(2);
+
         assertEq(nvdaToday.totalStakeBetHigher(), 0);
-        assertEq(nvdaToday.totalStakeBetLower(), 1 ether);
-        assertEq(address(this).balance, initCallerBalance - 1 ether);
-        assertEq(address(nvdaToday).balance,initCalleeBalance + 1 ether);
+        assertEq(nvdaToday.totalStakeBetLower(), stake); 
+        assertEq(address(this).balance, initCallerBalance - nvdaToday.CONTRACT_FEE() - rawStake);
+        assertEq(address(nvdaToday).balance, initCalleeBalance + nvdaToday.CONTRACT_FEE() + rawStake);
+        assertEq(nvdaToday.getPlayersBetHigher().length, 0);
+        assertEq(nvdaToday.getPlayersBetLower().length, 0);
+        assertEq(nvdaToday.getStakesBetHigherByAddress(address(this)), 0);
     }
 
     function testProcessBets() public {
@@ -94,7 +157,9 @@ contract NvdaTodayTest is Test {
         vm.warp(invalidTimestamp); // 'vm.warp' manipulates the block timestamp
 
         // Attempt to call processBets and expect it to fail
-        vm.expectRevert(bytes("You can only call this function between 21:00 and 23:59 UTC"));
+        vm.expectRevert(
+            bytes("You can only call this function between 21:00 and 23:59 UTC")
+        );
         nvdaToday.processBets();
     }
 }
