@@ -69,7 +69,7 @@ function NvdaToday() {
                     onChange={handleBetAmountChange}
                     placeholder="12"
                 />
-                <p> + contract fee 0.01 = </p>
+                <p> + process fee 0.01 = </p>
                 <div className="final-bet-amount">
                     <h3>{parseInt(betAmount) + 0.01}</h3>
                     <p>finney</p>
@@ -81,7 +81,7 @@ function NvdaToday() {
             </div>
             <div className="process-bet-section" style={showProcessBets ? {} : { display: 'none' }} >
                 <button className="process-bet-button" onClick={()=> setShowProcessBets(false)}>Process Bets</button>
-                <p>No one has triggered the process today.</p>
+                <p>No one has triggered the process today.<br></br>You'll get all the process fee if you click "Process Bets".</p>
             </div>
         </div>
     );
