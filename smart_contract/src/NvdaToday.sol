@@ -11,7 +11,7 @@ contract NvdaToday {
     }
 
     uint public constant MIN_BET = 1000000000000000; // 1 finney
-    uint public constant CONTRACT_FEE = 10000000000000; // 0.01 finney (1% fee or less)
+    uint public constant PROCESS_FEE = 10000000000000; // 0.01 finney (1% fee or less)
     uint public constant PRECISION_FACTOR = 1000;
 
     LastPrice public lastPrice;
@@ -56,8 +56,8 @@ contract NvdaToday {
         if (stack == 0) {
             playersBetHigher.push(msg.sender);
         }
-        stack += msg.value - CONTRACT_FEE;
-        totalStakeBetHigher += msg.value - CONTRACT_FEE;
+        stack += msg.value - PROCESS_FEE;
+        totalStakeBetHigher += msg.value - PROCESS_FEE;
         stakesBetHigher[msg.sender] = stack;
     }
 
@@ -67,8 +67,8 @@ contract NvdaToday {
         if (stack == 0) {
             playersBetLower.push(msg.sender);
         }
-        stack += msg.value - CONTRACT_FEE;
-        totalStakeBetLower += msg.value - CONTRACT_FEE;
+        stack += msg.value - PROCESS_FEE;
+        totalStakeBetLower += msg.value - PROCESS_FEE;
         stakesBetLower[msg.sender] = stack;
     }
 
@@ -104,17 +104,22 @@ contract NvdaToday {
             // No winner, stakes stay in the pool.
         }
 
+        uint processedPlayers = 0;
         for (uint i = 0; i < playersBetHigher.length; i++) {
             delete stakesBetHigher[playersBetHigher[i]];
+            processedPlayers++;
         }
         for (uint i = 0; i < playersBetLower.length; i++) {
             delete stakesBetLower[playersBetLower[i]];
+            processedPlayers++;
         }
         delete playersBetHigher;
         delete playersBetLower;
 
         lastPrice.price = price;
         lastPrice.timestamp = block.timestamp;
+
+        payable(msg.sender).transfer(processedPlayers * PROCESS_FEE); 
     }
 
     // getNvdaPrice returns the last closing price of NVDA stock.

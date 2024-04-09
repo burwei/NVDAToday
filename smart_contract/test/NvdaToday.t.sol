@@ -51,7 +51,7 @@ contract NvdaTodayTest is Test {
         uint initCallerBalance = address(this).balance;
         uint initCalleeBalance = address(nvdaToday).balance;
 
-        uint rawStake = (1 ether + nvdaToday.CONTRACT_FEE());
+        uint rawStake = (1 ether + nvdaToday.PROCESS_FEE());
         uint stake = 1 ether;
         nvdaToday.betHigher{value: rawStake}();
 
@@ -82,7 +82,7 @@ contract NvdaTodayTest is Test {
         uint initCallerBalance = address(this).balance;
         uint initCalleeBalance = address(nvdaToday).balance;
 
-        uint rawStake = (1 ether + nvdaToday.CONTRACT_FEE());
+        uint rawStake = (1 ether + nvdaToday.PROCESS_FEE());
         uint stake = 1 ether;
         nvdaToday.betLower{value: rawStake}();
 
@@ -114,28 +114,27 @@ contract NvdaTodayTest is Test {
         uint initCalleeBalance = address(nvdaToday).balance;
 
         // First test case: price is higher than last price, bet higher
-        uint rawStake = (1 ether + nvdaToday.CONTRACT_FEE());
+        uint rawStake = (1 ether + nvdaToday.PROCESS_FEE());
         uint stake = 1 ether;
         nvdaToday.betHigher{value: rawStake}();
         nvdaToday.publicSettleBets(2);
 
         assertEq(nvdaToday.totalStakeBetHigher(), 0);
         assertEq(nvdaToday.totalStakeBetLower(), 0);
-        assertEq(address(this).balance, initCallerBalance - nvdaToday.CONTRACT_FEE());
-        assertEq(address(nvdaToday).balance, initCalleeBalance + nvdaToday.CONTRACT_FEE());
+        assertEq(address(this).balance, initCallerBalance); // all process fees are sent to the caller who called settleBets
+        assertEq(address(nvdaToday).balance, initCalleeBalance);
         assertEq(nvdaToday.getPlayersBetHigher().length, 0);
         assertEq(nvdaToday.getPlayersBetLower().length, 0);
         assertEq(nvdaToday.getStakesBetHigherByAddress(address(this)), 0);
 
         // Second test case: continue the scenario, now price is higher than last price, bet lower
-        // This time we'll have some remaining balance in the contract.  
         nvdaToday.betLower{value: rawStake}();
         nvdaToday.publicSettleBets(2);
 
         assertEq(nvdaToday.totalStakeBetHigher(), 0);
         assertEq(nvdaToday.totalStakeBetLower(), stake); 
-        assertEq(address(this).balance, initCallerBalance - nvdaToday.CONTRACT_FEE() - rawStake);
-        assertEq(address(nvdaToday).balance, initCalleeBalance + nvdaToday.CONTRACT_FEE() + rawStake);
+        assertEq(address(this).balance, initCallerBalance - stake); // all process fees are sent to the caller who called settleBets
+        assertEq(address(nvdaToday).balance, initCalleeBalance + stake);
         assertEq(nvdaToday.getPlayersBetHigher().length, 0);
         assertEq(nvdaToday.getPlayersBetLower().length, 0);
         assertEq(nvdaToday.getStakesBetHigherByAddress(address(this)), 0);

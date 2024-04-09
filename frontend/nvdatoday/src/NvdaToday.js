@@ -81,7 +81,7 @@ function NvdaToday() {
             </div>
             <div className="process-bet-section" style={showProcessBets ? {} : { display: 'none' }} >
                 <button className="process-bet-button" onClick={()=> setShowProcessBets(false)}>Process Bets</button>
-                <p>No one has triggered the process today.<br></br>You'll get all the process fee if you click "Process Bets".</p>
+                <p>No one has triggered the process today.<br></br>You'll get all the process fees if you click "Process Bets".</p>
             </div>
         </div>
     );
