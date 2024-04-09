@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import './NvdaToday.css';
 
 function NvdaToday() {
-    const [price, setPrice] = useState('$945.12'); // Mocked price, you'll fetch this from your contract
-    const [betAmount, setBetAmount] = useState('');
-    const [network, setNetwork] = useState('Ethereum'); // Default network, you'll need to provide the logic for changing networks
-    const [address, setAddress] = useState(''); // Default address, you'll need to provide the logic for changing addresses
-
-    // Add your functions for interacting with your smart contract here.
-    // This will include fetching the price, placing bets, etc.
+    const [lastPrice, setLastPrice] = useState('$945.12');
+    const [lastPriceUpdatedAt, setLastPriceUpdatedAt] = useState('21:00:01');
+    const [betAmount, setBetAmount] = useState(12);
+    const [totalBetHigherAmount, setTotalBetHigherAmount] = useState(120);
+    const [totalBetLowerAmount, setTotalBetLowerAmount] = useState(50);
+    const [network, setNetwork] = useState('Ethereum');
+    const [address, setAddress] = useState('');
+    const [showProcessBets, setShowProcessBets] = useState(true);
 
     const handleBetAmountChange = (event) => {
         setBetAmount(event.target.value);
@@ -15,38 +17,30 @@ function NvdaToday() {
 
     const placeBet = (betDirection) => {
         console.log(`Placing bet to ${betDirection} with amount: ${betAmount}`);
-        // Here you would have logic to interact with your contract to place a bet
     };
 
     return (
         <div className="nvda-today">
-            <h1>NVDA Today</h1>
+            <div className='title-section'>
+                <h1>NVDA Today</h1>
+                <p>Will NVDA close higher or lower than previous price?</p>
+            </div>
             <div className="price-info">
-                <h3>Last price: {price}</h3>
-                <p>Updated at 21:00:01 UTC</p> {/* You should dynamically fetch this */}
+                <h3>Last Price: {lastPrice}</h3>
+                <p>Updated at {lastPriceUpdatedAt} UTC</p>
             </div>
             <div className="pool-section">
-                <div className="pool-box">
-                    <label>Bet Lower Pool:</label>
-                    <input
-                        type="text"
-                        value={betAmount}
-                        onChange={handleBetAmountChange}
-                        placeholder="25 finney"
-                    />
+                <div className="pool-box-lower">
+                    <p>Bet lower total amount (finney):</p>
+                    <h3>{totalBetLowerAmount}</h3>
                 </div>
-                <div className="pool-box">
-                    <label>Bet Higher Pool:</label>
-                    <input
-                        type="text"
-                        value={betAmount}
-                        onChange={handleBetAmountChange}
-                        placeholder="76 finney"
-                    />
+                <div className="pool-box-higher">
+                    <p>Bet higher total amount (finney):</p>
+                    <h3>{totalBetHigherAmount}</h3>
                 </div>
             </div>
             <div className="config-section">
-                <label>Network:</label>
+                <h4>Network:</h4>
                 <select value={network} onChange={(e) => setNetwork(e.target.value)}>
                     <option value="local-anvil-testnet">Local anvil (testnet)</option>
                     <option value="local-hardhat-testnet">Local Hardhat (testnet)</option>
@@ -56,34 +50,38 @@ function NvdaToday() {
                 </select>
             </div>
             <div className="config-section">
-                <label>Address:</label>
+                <h4>Address:</h4>
                 <input
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="25 finney"
+                    placeholder="0x1234...5678"
                 />
-                <label>or</label>
-                <button className="connect-metamask" onClick={() => { }}>Connect MetaMask</button>
+                <p>or</p>
+                <button className="connect-wallet" onClick={() => { }}>Wallet</button>
             </div>
             <div className="config-section">
-                <label>Your bet:</label>
+                <h4>Your bet:</h4>
                 <input
+                    className='bet-amount-input'
                     type="text"
                     value={betAmount}
                     onChange={handleBetAmountChange}
-                    placeholder="25"
+                    placeholder="12"
                 />
-                <label> + contract fee 0.01 finney = </label>
-                <label>25.01 finney</label>
+                <p> + contract fee 0.01 = </p>
+                <div className="final-bet-amount">
+                    <h3>{parseInt(betAmount) + 0.01}</h3>
+                    <p>finney</p>
+                </div>
             </div>
             <div className="bet-section">
-                <button className="bet-button red" onClick={() => placeBet('lower')}>Bet Lower</button>
-                <button className="bet-button green" onClick={() => placeBet('higher')}>Bet Higher</button>
+                <button className="bet-button-lower" onClick={() => placeBet('lower')}>Bet Lower</button>
+                <button className="bet-button-higher" onClick={() => placeBet('higher')}>Bet Higher</button>
             </div>
-            <div className="action-buttons">
-                <button className="grey">Process Bets</button>
-                {/* Add other action buttons as needed */}
+            <div className="process-bet-section" style={showProcessBets ? {} : { display: 'none' }} >
+                <button className="process-bet-button" onClick={()=> setShowProcessBets(false)}>Process Bets</button>
+                <p>No one has triggered the process today.</p>
             </div>
         </div>
     );
