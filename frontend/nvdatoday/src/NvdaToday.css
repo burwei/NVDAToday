@@ -127,14 +127,14 @@ html, body {
     margin: 0;;
 }
 
-.nvda-today .config-section .connect-wallet {
+.nvda-today .config-section .connect {
     background-color: #94a694;
     padding: 10px 20px; 
     border-radius: 5px;
     font-size: 16px;
 }
 
-.nvda-today .config-section .connect-wallet:hover {
+.nvda-today .config-section .connect:hover {
     background-color: #b3b3b3;
 }
 

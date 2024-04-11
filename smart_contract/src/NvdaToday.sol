@@ -29,26 +29,26 @@ contract NvdaToday {
 
     // constructor initializes the price feed contract.
     // NOTICE: Remove the constructor when deploying to local testnet.
-    constructor() {
-        // For NVDA/USD on BNB Mainnet (L1 mainnet).
-        priceFeed = AggregatorV3Interface(
-            0xea5c2Cbb5cD57daC24E26180b19a929F3E9699B8
-        );
+    // constructor() {
+    //     // For NVDA/USD on BNB Mainnet (L1 mainnet).
+    //     priceFeed = AggregatorV3Interface(
+    //         0xea5c2Cbb5cD57daC24E26180b19a929F3E9699B8
+    //     );
 
-        // For NVDA/USD on Arbitrum Mainnet (L2 mainnet).
-        priceFeed = AggregatorV3Interface(
-            0x4881A4418b5F2460B21d6F08CD5aA0678a7f262F
-        );
+    //     // For NVDA/USD on Arbitrum Mainnet (L2 mainnet).
+    //     priceFeed = AggregatorV3Interface(
+    //         0x4881A4418b5F2460B21d6F08CD5aA0678a7f262F
+    //     );
 
-        // For SPY/USD on Arbitrum Sepolia (L2 testnet).
-        // There's no NVDA/USD on any testnet, so we use SPY/USD instead.
-        priceFeed = AggregatorV3Interface(
-            0x4fB44FC4FA132d1a846Bd4143CcdC5a9f1870b06
-        );
+    //     // For SPY/USD on Arbitrum Sepolia (L2 testnet).
+    //     // There's no NVDA/USD on any testnet, so we use SPY/USD instead.
+    //     priceFeed = AggregatorV3Interface(
+    //         0x4fB44FC4FA132d1a846Bd4143CcdC5a9f1870b06
+    //     );
 
-        uint price = getLastNvdaPrice();
-        lastPrice = LastPrice(price, block.timestamp);
-    }
+    //     uint price = getLastNvdaPrice();
+    //     lastPrice = LastPrice(price, block.timestamp);
+    // }
 
     function betHigher() public payable {
         require(msg.value >= MIN_BET, "You must bet more than 1 finney");
