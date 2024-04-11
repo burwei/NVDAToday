@@ -127,3 +127,24 @@
    // in react terminal
    npm start
    ```
+## Day 3&4: not doing much, only figuring out a new development workflow 
+ - Writing code and unit test on local (vscode + forge)
+ - Manual testing using Remix IDE and anvil:  
+   1. Start anvil
+   2. Copy the contract to deploy from local file system to Remix IDE (need to change the import part by using github URL)
+   3. Connect Remix IDE to anvil
+   4. Compile and deploy contract using Remix IDE
+   5. Interact with the contract using Remix IDE UI
+   6. Stop anvil after testing
+ - In this approach, no need to clean any artifacts in local file system.
+
+## Day 4&5: chage game rule and figure out a tip of importing library
+ - Import the library:  
+   - Commit all the changes, or git stash them. forge needs a clean working and staging area to install library.  
+   - Use `forge install <github repo>` to install library
+   - Run `forge remapping` to see the path of the library, so that you know how to import it in .sol file.  
+ - Game rule chages:  
+ - The original game rule doesn't work due to the followings:  
+   - The gas fee is unignorably high so we need to set a minimum bet limit
+   - To schedule a time-based callback is too expensive (chainlink Time-Based Upkeep uses roughly 110K gas per call, [more info](https://docs.chain.link/chainlink-automation/guides/job-scheduler#entering-upkeep-details))
+   - So I changed the game rule and the latest version is present in README.md file.    

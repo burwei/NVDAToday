@@ -1,0 +1,213 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #576157;
+}
+
+.nvda-today {
+    font-family: 'Arial', sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    padding: 30px 20px;
+}
+
+.nvda-today h1 {
+    text-align: center;
+    font-size: 80px;
+    margin: 0;
+    color: black;
+}
+
+.nvda-today h3 {
+    text-align: center;
+    font-size: 30px;
+    margin: 0;
+    color: black;
+}
+
+.nvda-today h4 {
+    text-align: center;
+    font-size: 20px;
+    font-weight: normal;
+    margin: 0;
+    color: black;
+}
+
+.nvda-today p {
+    text-align: center;
+    font-size: 16px;
+    margin: 0;
+    color: black;
+}
+
+.nvda-today .title-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.nvda-today .price-info {
+    width: 100%;
+    background-color: #94a694;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.nvda-today .pool-section {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.nvda-today .pool-section .pool-box-lower {
+    background-color: #fa6e6e;
+    padding: 10px;
+    border-radius: 5px;
+    width: 150px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.nvda-today .pool-section .pool-box-higher {
+    background-color: #87e665;
+    padding: 10px;
+    border-radius: 5px;
+    width: 150px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.nvda-today .config-section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center; 
+    gap: 10px; 
+    margin-bottom: 10px;
+}
+
+.nvda-today .config-section input[type=text], select{
+    width: 200px;
+    text-align: center;
+    font-size: 20px;
+    margin: 0;
+    padding: 2px;
+}
+
+.nvda-today .config-section .bet-amount-input {
+    width: 100px !important;
+    text-align: center;
+    font-size: 20px;
+    margin: 0;;
+}
+
+.nvda-today .config-section .connect {
+    background-color: #94a694;
+    padding: 10px 20px; 
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.nvda-today .config-section .connect:hover {
+    background-color: #b3b3b3;
+}
+
+.nvda-today .config-section .final-bet-amount {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.nvda-today .bet-section {
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.nvda-today .bet-section .bet-button-lower{
+    width: 150px;
+    height: 80px;
+    background-color: #fa6e6e;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.nvda-today .bet-section .bet-button-lower:hover {
+    background-color: #f2a6a6;
+}
+
+.nvda-today .bet-section .bet-button-higher{
+    width: 150px;
+    height: 80px;
+    background-color: #87e665;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.nvda-today .bet-section .bet-button-higher:hover {
+    background-color: #b3f2a6;
+}
+
+.nvda-today .process-bet-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.nvda-today .process-bet-section .process-bet-button {
+    width: 150px;
+    height: 40px;
+    text-align: center;
+    background-color: #94a694;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.nvda-today .process-bet-section .process-bet-button:hover, .process-bet-button:checked {
+    background-color: #b3b3b3;
+}
